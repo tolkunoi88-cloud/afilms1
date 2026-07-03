@@ -1,0 +1,83 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "Test Kino",
+      "description": "an",
+      "genre": "Kino",
+      "year": "",
+      "quality": "HD",
+      "dood_url": "https://pub-d782be582a7d49ee9d59b63efba1568a.r2.dev/videos/3b25aca7-d488-4949-bbb7-cd1906245559-1776879878991.mp4",
+      "video_type": "other",
+      "poster": "Gemini_Generated_Image_5qu9jp5qu9jp5qu9.png",
+      "poster_url": "",
+      "folder_name": "test-kino-1",
+      "views": 7
+    }
+  ],
+  "episodes": [
+    {
+      "epId": 1,
+      "movieId": 1,
+      "episode_num": null,
+      "title": "",
+      "video_url": "https://pub-4205565f7a144945b67945103c879484.r2.dev/qilich12.mp4",
+      "video_type": "mover",
+      "views": 3
+    },
+    {
+      "epId": 2,
+      "movieId": 1,
+      "episode_num": null,
+      "title": "",
+      "video_url": "https://pub-4205565f7a144945b67945103c879484.r2.dev/qilich12.mp4",
+      "video_type": "mover",
+      "views": 1
+    },
+    {
+      "epId": 3,
+      "movieId": 1,
+      "episode_num": null,
+      "title": "",
+      "video_url": "https://pub-4205565f7a144945b67945103c879484.r2.dev/qilich12.mp4",
+      "video_type": "mover",
+      "views": 0
+    },
+    {
+      "epId": 4,
+      "movieId": 1,
+      "episode_num": null,
+      "title": "",
+      "video_url": "https://pub-4205565f7a144945b67945103c879484.r2.dev/qilich12.mp4",
+      "video_type": "mover",
+      "views": 1
+    }
+  ],
+  "ads": [
+    {
+      "id": 1,
+      "title": "test",
+      "url": "https://t.me/animelar_uz_tv",
+      "placement": "player",
+      "duration": 5,
+      "skip_enabled": 1,
+      "image": "Gemini_Generated_Image_dc5wh4dc5wh4dc5w.png",
+      "image_url": "",
+      "active": 1
+    }
+  ],
+  "settings": [
+    {
+      "key": "telegram_url",
+      "value": "https://t.me/afilmsuz"
+    },
+    {
+      "key": "youtube_url",
+      "value": "https://www.youtube.com/@afilmsuz"
+    },
+    {
+      "key": "instagram_url",
+      "value": "https://www.instagram.com/afilmsuz"
+    }
+  ]
+}

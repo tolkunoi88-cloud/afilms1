@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>afilms — Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #0a0a0a;
+            --card: #0d0d0d;
+            --accent: #FF4D00;
+            --accent-d: #d44000;
+            --glow: rgba(255, 77, 0, .15);
+            --text: #ffffff;
+            --muted: #9ca3af;
+            --border: rgba(255, 255, 255, 0.1);
+            --danger: #e74c3c;
+            --warn: #f39c12;
+            --r: 2px
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh
+        }
+
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255, 77, 0, .05), transparent 60%)
+        }
+
+        .login-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 44px 36px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center
+        }
+
+        .login-box h1 {
+            font-size: 28px;
+            font-weight: 950;
+            margin-bottom: 6px;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: -1.5px
+        }
+
+        .login-box p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em
+        }
+
+        .login-box input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 13px 15px;
+            border-radius: var(--r);
+            font-size: 14px;
+            margin-bottom: 10px;
+            outline: none;
+            font-family: inherit;
+            transition: .2s
+        }
+
+        .login-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow)
+        }
+
+        .login-box button {
+            width: 100%;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: var(--r);
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: .2s;
+            font-family: inherit
+        }
+
+        .login-box button:hover {
+            background: var(--accent-d);
+            transform: translateY(-1px)
+        }
+
+        .login-err {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 8px;
+            display: none
+        }
+
+        .dashboard {
+            display: none
+        }
+
+        .topbar {
+            background: rgba(5, 5, 5, .95);
+            backdrop-filter: blur(16px);
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .topbar .logo {
+            color: var(--accent);
+            font-weight: 950;
+            font-style: italic;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .topbar .logo span {
+            color: var(--muted);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-style: normal;
+            letter-spacing: 0.05em;
+            margin-left: 4px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 0 22px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface)
+        }
+
+        .tab-btn {
+            padding: 12px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: .2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .tab-btn:hover {
+            color: var(--text)
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent)
+        }
+
+        .tab-content {
+            display: none
+        }
+
+        .tab-content.active {
+            display: block
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: .2s;
+            font-family: inherit
+        }
+
+        .btn:hover {
+            transform: translateY(-1px)
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: #000
+        }
+
+        .btn-outline {
+            background: 0;
+            color: var(--accent);
+            border: 1px solid var(--border)
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: var(--glow)
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff
+        }
+
+        .btn-warn {
+            background: var(--warn);
+            color: #000
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px
+        }
+
+        .stat-icon.g {
+            background: rgba(0, 214, 114, .1);
+            color: var(--accent)
+        }
+
+        .stat-icon.b {
+            background: rgba(52, 152, 219, .1);
+            color: #3498db
+        }
+
+        .stat-icon.o {
+            background: rgba(243, 156, 18, .1);
+            color: #f39c12
+        }
+
+        .stat-icon.r {
+            background: rgba(231, 76, 60, .1);
+            color: #e74c3c
+        }
+
+        .stat-icon.p {
+            background: rgba(155, 89, 182, .1);
+            color: #9b59b6
+        }
+
+        .stat-info h3 {
+            font-size: 22px;
+            font-weight: 800
+        }
+
+        .stat-info p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .toolbar h2 {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toolbar h2::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 2px;
+            display: block
+        }
+
+        .table-wrap {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow-x: auto
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th {
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600
+        }
+
+        td {
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            vertical-align: middle
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, .015)
+        }
+
+        .poster-thumb {
+            width: 38px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border)
+        }
+
+        .badge-sm {
+            font-size: 9px;
+            padding: 2px 7px;
+            border-radius: 8px;
+            font-weight: 600
+        }
+
+        .badge-green {
+            background: rgba(0, 214, 114, .15);
+            color: var(--accent)
+        }
+
+        .badge-blue {
+            background: rgba(52, 152, 219, .15);
+            color: #3498db
+        }
+
+        .badge-orange {
+            background: rgba(243, 156, 18, .15);
+            color: #f39c12
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 5px
+        }
+
+        .act-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: .2s
+        }
+
+        .act-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .act-btn.del:hover {
+            border-color: var(--danger);
+            color: var(--danger)
+        }
+
+        .act-btn.ep {
+            color: #9b59b6
+        }
+
+        .act-btn.ep:hover {
+            border-color: #9b59b6;
+            color: #9b59b6
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 16px
+        }
+
+        .modal-overlay.open {
+            display: flex
+        }
+
+        .modal {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: mIn .2s ease
+        }
+
+        @keyframes mIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(.97)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1)
+            }
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .modal-head h3 {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            border-color: var(--danger)
+        }
+
+        .modal-body {
+            padding: 20px 22px
+        }
+
+        .form-group {
+            margin-bottom: 14px
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            margin-bottom: 5px
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 11px 13px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: .2s
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow)
+        }
+
+        .form-group textarea {
+            min-height: 70px;
+            resize: vertical
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        .hint-text {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 11px 13px
+        }
+
+        .check-row input {
+            width: auto !important;
+            accent-color: var(--accent)
+        }
+
+        .check-row span {
+            font-size: 13px;
+            color: var(--text)
+        }
+
+        .modal-foot {
+            padding: 14px 22px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px
+        }
+
+        /* FILE UPLOAD */
+        .file-upload {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer
+        }
+
+        .file-upload-btn {
+            background: var(--surface);
+            border: 1px dashed var(--border);
+            color: var(--muted);
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            transition: .2s
+        }
+
+        .file-upload:hover .file-upload-btn {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .file-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            display: none
+        }
+
+        .gallery-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: .2s;
+            font-family: inherit
+        }
+
+        .gallery-btn:hover {
+            border-color: var(--accent);
+            background: var(--glow)
+        }
+
+        /* PHOTO GALLERY */
+        .photo-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding: 2px
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: .2s;
+            aspect-ratio: 2/3
+        }
+
+        .photo-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.03)
+        }
+
+        .photo-item.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow)
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
+        }
+
+        .photo-item .photo-check {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--accent);
+            color: #000;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px
+        }
+
+        .photo-item.selected .photo-check {
+            display: flex
+        }
+
+        .photo-empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* ADS SECTION */
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px
+        }
+
+        .ad-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden
+        }
+
+        .ad-card img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            display: block
+        }
+
+        .ad-card-body {
+            padding: 12px
+        }
+
+        .ad-card-body .ad-url {
+            font-size: 11px;
+            color: var(--muted);
+            word-break: break-all;
+            margin-top: 4px
+        }
+
+        .ad-card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px
+        }
+
+        .ad-placeholder {
+            width: 100%;
+            height: 130px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 28px
+        }
+
+        /* EPISODES */
+        .ep-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .ep-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px
+        }
+
+        .ep-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .ep-num {
+            background: var(--glow);
+            color: var(--accent);
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0
+        }
+
+        .ep-title {
+            font-size: 13px;
+            font-weight: 600
+        }
+
+        .ep-url {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+            word-break: break-all
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: .3s
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @media(max-width:768px) {
+            .stats {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .form-row {
+                grid-template-columns: 1fr
+            }
+
+            .main {
+                padding: 14px
+            }
+        }
+
+        @media(max-width:500px) {
+            .stats {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .img-tab-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 7px 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s
+        }
+
+        .img-tab-btn.active {
+            background: var(--glow);
+            color: var(--accent);
+            border-color: var(--accent)
+        }
+
+        .img-tab-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-box">
+            <i class="fas fa-shield-halved" style="font-size:36px;color:var(--accent);margin-bottom:14px"></i>
+            <h1>Admin Panel</h1>
+            <p>afilms boshqaruv paneli</p>
+            <input type="text" id="login-user" placeholder="Login">
+            <input type="password" id="login-pass" placeholder="Parol">
+            <button onclick="doLogin()"><i class="fas fa-right-to-bracket"></i> Kirish</button>
+            <div class="login-err" id="login-err"><i class="fas fa-exclamation-circle"></i> Login yoki parol xato!</div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard" id="dashboard">
+        <div class="topbar">
+            <div class="logo"><i class="fas fa-film"></i> afilms <span>/ Admin</span></div>
+            <div style="display:flex;gap:6px">
+                <a href="/index.html" class="btn btn-outline" target="_blank"><i class="fas fa-external-link-alt"></i>
+                    Sayt</a>
+                <button class="btn btn-outline" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-movies',this)"><i class="fas fa-film"></i>
+                Kinolar</button>
+            <button class="tab-btn" onclick="switchTab('tab-ads',this)"><i class="fas fa-rectangle-ad"></i>
+                Reklama</button>
+            <button class="tab-btn" onclick="switchTab('tab-settings',this)"><i class="fas fa-gear"></i>
+                Sozlamalar</button>
+            <button class="tab-btn" onclick="switchTab('tab-stats',this)"><i class="fas fa-chart-line"></i>
+                Statistika</button>
+        </div>
+
+        <!-- MOVIES TAB -->
+        <div class="tab-content active" id="tab-movies">
+            <div class="main">
+                <div class="stats" id="stats-row"></div>
+                <div class="toolbar">
+                    <h2>Kinolar ro'yxati</h2>
+                    <button class="btn btn-accent" onclick="openAddModal()"><i class="fas fa-plus"></i> Yangi
+                        kino</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Poster</th>
+                                <th>Nomi</th>
+                                <th>Janr</th>
+                                <th>Yil</th>
+                                <th>Video</th>
+                                <th>Qismlar</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movie-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADS TAB -->
+        <div class="tab-content" id="tab-ads">
+            <div class="main">
+                <div class="toolbar">
+                    <h2>Reklama Bannerlari</h2>
+                    <button class="btn btn-accent" onclick="openAdModal()"><i class="fas fa-plus"></i> Yangi
+                        banner</button>
+                </div>
+                <div class="ads-grid" id="ads-grid"></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div class="tab-content" id="tab-settings">
+            <div class="main">
+                <div class="toolbar"><h2>Qo'shimcha sozlamalar</h2></div>
+                <div style="max-width:640px;background:var(--card,#1a1a22);border:1px solid var(--border,#222230);border-radius:12px;padding:22px">
+                    <div class="form-group" style="margin-bottom:16px">
+                        <label style="display:block;margin-bottom:6px;font-size:13px;font-weight:600">Telegram kanal URL</label>
+                        <input type="url" id="set-telegram-url" placeholder="https://t.me/afilmsuz" style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border,#222230);background:var(--surface,#131318);color:#fff;font-family:inherit">
+                    </div>
+                    <div class="form-group" style="margin-bottom:16px">
+                        <label style="display:block;margin-bottom:6px;font-size:13px;font-weight:600">YouTube kanal URL</label>
+                        <input type="url" id="set-youtube-url" placeholder="https://www.youtube.com/@afilmsuz" style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border,#222230);background:var(--surface,#131318);color:#fff;font-family:inherit">
+                    </div>
+                    <div class="form-group" style="margin-bottom:16px">
+                        <label style="display:block;margin-bottom:6px;font-size:13px;font-weight:600">Instagram sahifa URL</label>
+                        <input type="url" id="set-instagram-url" placeholder="https://www.instagram.com/afilmsuz" style="width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border,#222230);background:var(--surface,#131318);color:#fff;font-family:inherit">
+                    </div>
+                    <button class="btn btn-accent" onclick="saveSettings()"><i class="fas fa-save"></i> Saqlash</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS TAB -->
+        <div class="tab-content" id="tab-stats">
+            <div class="main">
+                <div class="toolbar">
+                    <h2>Ko'rishlar Statistikasi</h2>
+                    <button class="btn btn-outline" onclick="loadStats()"><i class="fas fa-sync-alt"></i> Yangilash</button>
+                </div>
+                
+                <div class="stats-grids" style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:16px;">
+                    <!-- Top Movies -->
+                    <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;">
+                        <h3 style="font-size:16px; margin-bottom:14px; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-fire"></i> Eng ko'p ko'rilgan animelar / kinolar
+                        </h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px">#</th>
+                                        <th>Kino Nomi</th>
+                                        <th style="text-align:right">Ko'rishlar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stats-movies-tbody">
+                                    <tr><td colspan="3" style="text-align:center; padding:20px; color:var(--muted)">Yuklanmoqda...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Top Episodes -->
+                    <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;">
+                        <h3 style="font-size:16px; margin-bottom:14px; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-play-circle"></i> Eng ko'p ko'rilgan qismlar (epizodlar)
+                        </h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px">#</th>
+                                        <th>Qism</th>
+                                        <th>Kino Nomi</th>
+                                        <th style="text-align:right">Ko'rishlar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stats-episodes-tbody">
+                                    <tr><td colspan="4" style="text-align:center; padding:20px; color:var(--muted)">Yuklanmoqda...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOVIE MODAL -->
+    <div class="modal-overlay" id="movie-modal">
+        <div class="modal">
+            <div class="modal-head">
+                <h3 id="modal-title"><i class="fas fa-plus-circle"></i> Yangi kino</h3>
+                <button class="modal-close" onclick="closeModal('movie-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-id">
+                <div class="form-group"><label>Kino nomi</label><input type="text" id="f-title"
+                        placeholder="Masalan: Ovoz shakli"></div>
+                <div class="form-group">
+                    <label>Poster rasm</label>
+                    <div style="display:flex;gap:6px;margin-bottom:8px">
+                        <button type="button" class="img-tab-btn active" onclick="switchImgTab('movie','file',this)">📁
+                            Fayl</button>
+                        <button type="button" class="img-tab-btn" onclick="switchImgTab('movie','url',this)">🔗
+                            URL</button>
+                        <button type="button" class="gallery-btn" onclick="openGallery('movie')"><i
+                                class="fas fa-images"></i> Galereya</button>
+                    </div>
+                    <div id="movie-img-tab-file">
+                        <div class="file-upload">
+                            <input type="file" id="f-poster-file" accept="image/*" onchange="previewPoster(this)">
+                            <div class="file-upload-btn"><i class="fas fa-cloud-upload-alt"></i> <span
+                                    id="file-label">Yangi rasm yuklash</span></div>
+                        </div>
+                    </div>
+                    <div id="movie-img-tab-url" style="display:none">
+                        <input type="text" id="f-poster-url" placeholder="https://example.com/poster.jpg"
+                            oninput="previewPosterUrl(this.value)"
+                            style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:8px;font-size:13px;font-family:inherit;outline:none">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                        <img class="file-preview" id="poster-preview" style="width:60px;height:84px">
+                        <span id="selected-photo-name" style="font-size:11px;color:var(--accent)"></span>
+                    </div>
+                </div>
+                <div class="form-group"><label>Tavsif</label><textarea id="f-desc"
+                        placeholder="Kino haqida..."></textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Turi (Janr)</label>
+                        <select id="f-genre">
+                            <option value="Anime">Anime</option>
+                            <option value="Kino">Kino</option>
+                            <option value="Multfilm">Multfilm</option>
+                            <option value="Drama">Drama</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Yil</label><input type="text" id="f-year" placeholder="2024"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Sifat</label>
+                        <select id="f-quality">
+                            <option>Full HD</option>
+                            <option>HD</option>
+                            <option>720p</option>
+                            <option>480p</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Video server</label>
+                        <select id="f-vserver" onchange="onServerChange()">
+                            <option value="mover">🎥 Mover.uz</option><option value="doodstream">🎬 DoodStream</option>
+                            <option value="mixdrop">📦 Mixdrop</option>
+                            <option value="youtube">🔴 YouTube</option>
+                            <option value="mp4">🎞️ MP4 / Shaxsiy player</option>
+                            <option value="other">🔗 Boshqa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id="url-label">Video URL</label>
+                    <input type="text" id="f-doodurl" placeholder="https://...">
+                    <div id="url-hint" style="margin-top:6px;font-size:11px;color:var(--muted);line-height:1.6;"></div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-outline" onclick="closeModal('movie-modal')">Bekor</button>
+                <button class="btn btn-accent" onclick="saveMovie()"><i class="fas fa-save"></i> Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE MOVIE MODAL -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal" style="max-width:380px">
+            <div class="modal-head">
+                <h3 style="color:var(--danger)"><i class="fas fa-trash-alt"></i> O'chirish</h3>
+                <button class="modal-close" onclick="closeModal('delete-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="text-align:center">
+                <p>Ushbu kinoni o'chirasizmi?</p>
+                <p id="del-name" style="font-weight:700;font-size:17px;color:var(--accent);margin:10px 0"></p>
+            </div>
+            <div class="modal-foot" style="justify-content:center">
+                <button class="btn btn-outline" onclick="closeModal('delete-modal')">Yo'q</button>
+                <button class="btn btn-danger" id="confirm-del-btn"><i class="fas fa-trash"></i> Ha, o'chir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GALLERY MODAL -->
+    <div class="modal-overlay" id="gallery-modal">
+        <div class="modal" style="max-width:640px">
+            <div class="modal-head">
+                <h3><i class="fas fa-images"></i> Rasmlar Galereyasi</h3>
+                <button class="modal-close" onclick="closeModal('gallery-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="gallery-grid" class="photo-gallery-grid">
+                    <div class="photo-empty"><i class="fas fa-spinner"
+                            style="animation:spin 1s linear infinite;font-size:22px;margin-bottom:8px;display:block"></i>Yuklanmoqda...
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot" style="justify-content:space-between">
+                <span id="gallery-count" style="font-size:12px;color:var(--muted)"></span>
+                <div style="display:flex;gap:8px">
+                    <button class="btn btn-outline" onclick="closeModal('gallery-modal')">Yopish</button>
+                    <button class="btn btn-accent" id="gallery-select-btn" onclick="confirmGallerySelection()"
+                        disabled><i class="fas fa-check"></i> Tanlash</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EPISODES MODAL -->
+    <div class="modal-overlay" id="ep-modal">
+        <div class="modal" style="max-width:640px">
+            <div class="modal-head">
+                <h3><i class="fas fa-list-ol"></i> <span id="ep-modal-title">Qismlar</span></h3>
+                <button class="modal-close" onclick="closeModal('ep-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="ep-list" class="ep-list"></div>
+                <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+                    <div
+                        style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">
+                        Yangi qism qo'shish</div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Qism raqami</label><input type="number" id="ep-num"
+                                placeholder="1" min="1"></div>
+                        <div class="form-group"><label>Server</label>
+                            <select id="ep-server">
+                                <option value="mover">🎥 Mover.uz</option><option value="doodstream">🎬 DoodStream</option>
+                                <option value="mixdrop">📦 Mixdrop</option>
+                                <option value="youtube">🔴 YouTube</option>
+                            <option value="mp4">🎞️ MP4 / Shaxsiy player</option>
+                                <option value="other">🔗 Boshqa</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Qism nomi (ixtiyoriy)</label><input type="text" id="ep-title"
+                            placeholder="Masalan: 1-qism yoki birinchi qism"></div>
+                    <div class="form-group"><label>Video URL</label><input type="text" id="ep-url"
+                            placeholder="https://..."></div>
+                    <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="addEpisode()"><i
+                            class="fas fa-plus"></i> Qism qo'shish</button>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-outline" onclick="closeModal('ep-modal')">Yopish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT EPISODE MODAL -->
+    <div class="modal-overlay" id="ep-edit-modal">
+        <div class="modal" style="max-width:440px">
+            <div class="modal-head">
+                <h3><i class="fas fa-pen"></i> Qismni tahrirlash</h3>
+                <button class="modal-close" onclick="closeModal('ep-edit-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ep-edit-epid">
+                <div class="form-row">
+                    <div class="form-group"><label>Qism raqami</label><input type="number" id="ep-edit-num" min="1">
+                    </div>
+                    <div class="form-group"><label>Server</label>
+                        <select id="ep-edit-server">
+                            <option value="mover">🎥 Mover.uz</option><option value="doodstream">🎬 DoodStream</option>
+                            <option value="mixdrop">📦 Mixdrop</option>
+                            <option value="youtube">🔴 YouTube</option>
+                            <option value="mp4">🎞️ MP4 / Shaxsiy player</option>
+                            <option value="other">🔗 Boshqa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Qism nomi</label><input type="text" id="ep-edit-title"
+                        placeholder="1-qism"></div>
+                <div class="form-group"><label>Video URL</label><input type="text" id="ep-edit-url"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-outline" onclick="closeModal('ep-edit-modal')">Bekor</button>
+                <button class="btn btn-accent" onclick="saveEpisode()"><i class="fas fa-save"></i> Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AD MODAL -->
+    <div class="modal-overlay" id="ad-modal">
+        <div class="modal" style="max-width:480px">
+            <div class="modal-head">
+                <h3 id="ad-modal-title"><i class="fas fa-rectangle-ad"></i> Yangi banner</h3>
+                <button class="modal-close" onclick="closeModal('ad-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ad-edit-id">
+                <div class="form-group"><label>Banner sarlavhasi (ixtiyoriy)</label><input type="text" id="ad-title"
+                        placeholder="Reklama nomi"></div>
+                <div class="form-group">
+                    <label>Banner rasm</label>
+                    <div style="display:flex;gap:6px;margin-bottom:8px">
+                        <button type="button" class="img-tab-btn active" onclick="switchImgTab('ad','file',this)">📁
+                            Fayl</button>
+                        <button type="button" class="img-tab-btn" onclick="switchImgTab('ad','url',this)">🔗
+                            URL</button>
+                        <button type="button" class="gallery-btn" onclick="openGallery('ad')"><i
+                                class="fas fa-images"></i> Galereya</button>
+                    </div>
+                    <div id="ad-img-tab-file">
+                        <div class="file-upload">
+                            <input type="file" id="ad-img-file" accept="image/*" onchange="previewAdImg(this)">
+                            <div class="file-upload-btn"><i class="fas fa-cloud-upload-alt"></i> <span
+                                    id="ad-file-label">Rasm yuklash</span></div>
+                        </div>
+                    </div>
+                    <div id="ad-img-tab-url" style="display:none">
+                        <input type="text" id="ad-img-url" placeholder="https://example.com/banner.jpg"
+                            oninput="previewAdImgUrl(this.value)"
+                            style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:8px;font-size:13px;font-family:inherit;outline:none">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                        <img class="file-preview" id="ad-img-preview"
+                            style="width:80px;height:50px;object-fit:cover;border-radius:6px">
+                        <span id="ad-selected-name" style="font-size:11px;color:var(--accent)"></span>
+                    </div>
+                </div>
+                <div class="form-group"><label>Bosilganda ochiladigan URL</label><input type="url" id="ad-url"
+                        placeholder="https://example.com/..."></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Reklama joyi</label>
+                        <select id="ad-placement">
+                            <option value="all">Hamma joyda</option>
+                            <option value="sidebar">Yon tomon</option>
+                            <option value="player">Player ustida</option>
+                            <option value="kinolar">Kinolar bo'limi</option>
+                            <option value="anime">Anime bo'limi</option>
+                            <option value="multfilm">Multfilm bo'limi</option>
+                            <option value="drama">Drama bo'limi</option>
+                        </select>
+                        <span class="hint-text">Yon tomon, bo'limlar yoki video player reklamasi sifatida chiqadi.</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Taymer (soniya)</label>
+                        <input type="number" id="ad-duration" min="3" max="120" value="5">
+                        <span class="hint-text">3–4 ta reklama bo'lsa, har biri shu vaqt tugagach almashadi.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Player reklama tugmasi</label>
+                    <label class="check-row"><input type="checkbox" id="ad-skip-enabled" checked><span>O'tkazib yuborish tugmasi chiqsin</span></label>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-outline" onclick="closeModal('ad-modal')">Bekor</button>
+                <button class="btn btn-accent" onclick="saveAd()"><i class="fas fa-save"></i> Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE AD MODAL -->
+    <div class="modal-overlay" id="delete-ad-modal">
+        <div class="modal" style="max-width:360px">
+            <div class="modal-head">
+                <h3 style="color:var(--danger)"><i class="fas fa-trash-alt"></i> Bannerni o'chirish</h3>
+                <button class="modal-close" onclick="closeModal('delete-ad-modal')"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="text-align:center">
+                <p>Bu bannerni o'chirasizmi?</p>
+            </div>
+            <div class="modal-foot" style="justify-content:center">
+                <button class="btn btn-outline" onclick="closeModal('delete-ad-modal')">Yo'q</button>
+                <button class="btn btn-danger" id="confirm-del-ad-btn"><i class="fas fa-trash"></i> Ha, o'chir</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API = window.location.origin;
+        let adminToken = '';
+        let moviesList = [];
+        let adsList = [];
+        let _curEpMovieId = null;
+        let _galleryTarget = 'movie'; // 'movie' or 'ad'
+        let _gallerySelected = null;
+
+        function normalizeMovie(m) {
+            if (m && !m.poster_url && m.poster && String(m.poster).startsWith('http')) {
+                m.poster_url = m.poster;
+            }
+            return m;
+        }
+
+        function normalizeAd(a) {
+            if (!a) return a;
+            if (!a.image_url && a.image && String(a.image).startsWith('http')) a.image_url = a.image;
+            if (!a.placement) a.placement = 'sidebar';
+            a.duration = Math.max(3, parseInt(a.duration, 10) || 5);
+            if (typeof a.skip_enabled === 'undefined') a.skip_enabled = true;
+            return a;
+        }
+
+        function getMoviePosterSrc(m) {
+            if (m.poster_url && String(m.poster_url).startsWith('http')) return m.poster_url;
+            if (m.poster && String(m.poster).startsWith('http')) return m.poster;
+            if (m.poster) return API + '/api/photos/' + m.poster;
+            return 'https://via.placeholder.com/38x54/1a1a22/00d672?text=?';
+        }
+
+        function getAdImageSrc(a) {
+            if (a.image_url && String(a.image_url).startsWith('http')) return a.image_url;
+            if (a.image && String(a.image).startsWith('http')) return a.image;
+            if (a.image) return API + '/api/photos/' + a.image;
+            return '';
+        }
+
+        // ===== LOGIN =====
+        async function doLogin() {
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value;
+            try {
+                const res = await fetch(API + '/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
+                const data = await res.json();
+                if (data.success) { adminToken = data.token; sessionStorage.setItem('afilms_token', adminToken); showDash(); }
+                else { document.getElementById('login-err').style.display = 'block'; }
+            } catch (e) { document.getElementById('login-err').style.display = 'block'; }
+        }
+        function doLogout() { sessionStorage.removeItem('afilms_token'); location.reload(); }
+        function showDash() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            loadAll();
+        }
+        document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+        if (sessionStorage.getItem('afilms_token')) { adminToken = sessionStorage.getItem('afilms_token'); showDash(); }
+
+        // ===== TABS =====
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+            if (tabId === 'tab-ads') loadAds();
+            if (tabId === 'tab-settings') loadSettings();
+            if (tabId === 'tab-stats') loadStats();
+        }
+
+        // ===== STATISTICS =====
+        async function loadStats() {
+            try {
+                const res = await fetch(API + '/api/stats', {
+                    headers: { 'Authorization': 'Bearer ' + adminToken }
+                });
+                if (!res.ok) throw new Error('Yuklab bo\'lmadi');
+                const data = await res.json();
+                
+                const mBody = document.getElementById('stats-movies-tbody');
+                if (!data.top_movies || !data.top_movies.length) {
+                    mBody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:12px;color:var(--muted)">Hali ko\'rilgan kinolar yo\'q</td></tr>';
+                } else {
+                    mBody.innerHTML = data.top_movies.map((m, idx) => `<tr>
+                        <td style="color:var(--muted)">${idx+1}</td>
+                        <td><strong>${m.title}</strong> <span style="font-size:10px;color:var(--muted);margin-left:5px">(${m.genre || ''})</span></td>
+                        <td style="text-align:right;font-weight:700;color:var(--accent)"><i class="far fa-eye"></i> ${m.views || 0}</td>
+                    </tr>`).join('');
+                }
+
+                const eBody = document.getElementById('stats-episodes-tbody');
+                if (!data.top_episodes || !data.top_episodes.length) {
+                    eBody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:12px;color:var(--muted)">Hali ko\'rilgan qismlar yo\'q</td></tr>';
+                } else {
+                    eBody.innerHTML = data.top_episodes.map((e, idx) => `<tr>
+                        <td style="color:var(--muted)">${idx+1}</td>
+                        <td><span class="badge-sm badge-orange">${e.episode_num}-qism</span> ${e.ep_title ? `(${e.ep_title})` : ''}</td>
+                        <td><strong>${e.movie_title}</strong></td>
+                        <td style="text-align:right;font-weight:700;color:var(--accent)"><i class="far fa-eye"></i> ${e.views || 0}</td>
+                    </tr>`).join('');
+                }
+            } catch (e) {
+                toast('Statistikani yuklab bo\'lmadi', 'warn');
+            }
+        }
+
+        // ===== SETTINGS =====
+        async function loadSettings() {
+            try {
+                const res = await fetch(API + '/api/settings');
+                const s = await res.json();
+                document.getElementById('set-telegram-url').value = s.telegram_url || '';
+                document.getElementById('set-youtube-url').value = s.youtube_url || '';
+                document.getElementById('set-instagram-url').value = s.instagram_url || '';
+            } catch (e) {}
+        }
+        async function saveSettings() {
+            const payload = {
+                telegram_url: document.getElementById('set-telegram-url').value.trim(),
+                youtube_url: document.getElementById('set-youtube-url').value.trim(),
+                instagram_url: document.getElementById('set-instagram-url').value.trim(),
+            };
+            try {
+                const res = await fetch(API + '/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + adminToken },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) toast('Sozlamalar saqlandi', 'success');
+                else toast(data.error || 'Xato', 'warn');
+            } catch (e) { toast('Server xatosi', 'warn'); }
+        }
+
+        // ===== DATA =====
+        async function loadAll() {
+            try {
+                const res = await fetch(API + '/api/movies');
+                moviesList = (await res.json()).map(normalizeMovie);
+                renderStats(); renderTable();
+            } catch (e) { toast('Server bilan bog\'lanib bo\'lmadi', 'warn'); }
+        }
+
+        function renderStats() {
+            const genres = [...new Set(moviesList.map(m => (m.genre || '').split('/')[0].trim()))].filter(Boolean);
+            const vid = moviesList.filter(m => m.dood_url && m.dood_url.trim()).length;
+            const eps = moviesList.reduce((s, m) => s + (m.episodes ? m.episodes.length : 0), 0);
+            document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="stat-icon g"><i class="fas fa-film"></i></div><div class="stat-info"><h3>${moviesList.length}</h3><p>Jami kinolar</p></div></div>
+    <div class="stat-card"><div class="stat-icon b"><i class="fas fa-tags"></i></div><div class="stat-info"><h3>${genres.length}</h3><p>Janrlar</p></div></div>
+    <div class="stat-card"><div class="stat-icon o"><i class="fas fa-play-circle"></i></div><div class="stat-info"><h3>${vid}</h3><p>Video bor</p></div></div>
+    <div class="stat-card"><div class="stat-icon p"><i class="fas fa-list-ol"></i></div><div class="stat-info"><h3>${eps}</h3><p>Jami qismlar</p></div></div>
+    <div class="stat-card"><div class="stat-icon r"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h3>${moviesList.length - vid}</h3><p>Video yo'q</p></div></div>`;
+        }
+
+        function renderTable() {
+            const t = document.getElementById('movie-tbody');
+            if (!moviesList.length) { t.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:36px;color:var(--muted)">Hech qanday kino yo\'q</td></tr>'; return; }
+            t.innerHTML = moviesList.map(m => `<tr>
+    <td style="color:var(--muted)">${m.id}</td>
+    <td><img class="poster-thumb" src="${getMoviePosterSrc(m)}" onerror="this.src='https://via.placeholder.com/38x54/1a1a22/00d672?text=?'"></td>
+    <td><strong>${m.title}</strong></td>
+    <td><span class="badge-sm badge-blue">${(m.genre || '').split('/')[0].trim() || '—'}</span></td>
+    <td>${m.year || '—'}</td>
+    <td>${m.dood_url && m.dood_url.trim() ? '<span class="badge-sm badge-green">✓ Bor</span>' : '<span style="color:var(--muted)">—</span>'}</td>
+    <td><span class="badge-sm badge-orange">${(m.episodes || []).length} qism</span></td>
+    <td><div class="actions-cell">
+      <button class="act-btn ep" title="Qismlar" onclick="openEpisodesModal(${m.id})"><i class="fas fa-list-ol"></i></button>
+      <button class="act-btn" title="Tahrirlash" onclick="openEditModal(${m.id})"><i class="fas fa-pen"></i></button>
+      <button class="act-btn del" title="O'chirish" onclick="confirmDel(${m.id})"><i class="fas fa-trash"></i></button>
+    </div></td>
+  </tr>`).join('');
+        }
+
+        // ===== MODALS =====
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+        // ===== MOVIE FORM =====
+        function previewPoster(input) {
+            const prev = document.getElementById('poster-preview');
+            const lbl = document.getElementById('file-label');
+            if (input.files && input.files[0]) {
+                lbl.textContent = input.files[0].name;
+                const reader = new FileReader();
+                reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('edit-id').value = '';
+            ['f-title', 'f-desc', 'f-genre', 'f-year', 'f-doodurl', 'f-poster-url'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('f-quality').value = 'Full HD';
+            document.getElementById('f-vserver').value = 'mover';
+            document.getElementById('f-poster-file').value = '';
+            document.getElementById('file-label').textContent = 'Yangi rasm yuklash';
+            document.getElementById('poster-preview').style.display = 'none';
+            document.getElementById('selected-photo-name').textContent = '';
+            window._selectedPhotoName = '';
+            // Reset image tabs to file mode
+            document.getElementById('movie-img-tab-file').style.display = '';
+            document.getElementById('movie-img-tab-url').style.display = 'none';
+            document.querySelectorAll('#movie-modal .img-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+            onServerChange();
+        }
+
+        function openAddModal() {
+            resetForm();
+            document.getElementById('modal-title').innerHTML = '<i class="fas fa-plus-circle"></i> Yangi kino';
+            openModal('movie-modal');
+        }
+
+        function openEditModal(id) {
+            const m = moviesList.find(x => x.id === id); if (!m) return;
+            resetForm();
+            document.getElementById('modal-title').innerHTML = '<i class="fas fa-pen"></i> ' + m.title;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('f-title').value = m.title;
+            document.getElementById('f-desc').value = m.description || '';
+            document.getElementById('f-genre').value = m.genre || '';
+            document.getElementById('f-year').value = m.year || '';
+            document.getElementById('f-quality').value = m.quality || 'Full HD';
+            document.getElementById('f-doodurl').value = m.dood_url || '';
+            document.getElementById('f-vserver').value = m.video_type || 'mover';
+            onServerChange();
+            // If poster_url exists, show URL tab with value
+            if (m.poster_url) {
+                document.getElementById('f-poster-url').value = m.poster_url;
+                document.getElementById('movie-img-tab-file').style.display = 'none';
+                document.getElementById('movie-img-tab-url').style.display = '';
+                document.querySelectorAll('#movie-modal .img-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 1));
+                const p = document.getElementById('poster-preview'); p.src = m.poster_url; p.style.display = 'block';
+            } else if (m.poster) {
+                const p = document.getElementById('poster-preview'); p.src = API + '/api/photos/' + m.poster; p.style.display = 'block';
+            }
+            window._selectedPhotoName = m.poster || '';
+            openModal('movie-modal');
+        }
+
+        async function saveMovie() {
+            const title = document.getElementById('f-title').value.trim();
+            if (!title) { toast('Kino nomini kiriting!', 'warn'); return; }
+            const fd = new FormData();
+            fd.append('title', title);
+            fd.append('description', document.getElementById('f-desc').value.trim());
+            fd.append('genre', document.getElementById('f-genre').value.trim());
+            fd.append('year', document.getElementById('f-year').value.trim());
+            fd.append('quality', document.getElementById('f-quality').value);
+            fd.append('dood_url', document.getElementById('f-doodurl').value.trim());
+            fd.append('video_type', document.getElementById('f-vserver').value);
+            // URL mode check
+            const posterUrl = document.getElementById('f-poster-url').value.trim();
+            const urlTabVisible = document.getElementById('movie-img-tab-url').style.display !== 'none';
+            if (urlTabVisible && posterUrl) {
+                fd.append('poster_url', posterUrl);
+            } else {
+                const file = document.getElementById('f-poster-file').files[0];
+                if (file) { fd.append('poster', file); }
+                else if (window._selectedPhotoName) { fd.append('existing_poster', window._selectedPhotoName); }
+            }
+            const editId = document.getElementById('edit-id').value;
+            try {
+                let res;
+                if (editId) {
+                    res = await fetch(API + '/api/movies/' + editId, { method: 'PUT', headers: { 'Authorization': 'Bearer ' + adminToken }, body: fd });
+                } else {
+                    res = await fetch(API + '/api/movies', { method: 'POST', headers: { 'Authorization': 'Bearer ' + adminToken }, body: fd });
+                }
+                const data = await res.json();
+                if (data.success || data.id) { toast(editId ? 'Yangilandi!' : 'Qo\'shildi!'); closeModal('movie-modal'); loadAll(); }
+                else { toast(data.error || 'Xato', 'warn'); }
+            } catch (e) { toast('Server xatosi', 'warn'); }
+        }
+
+        function confirmDel(id) {
+            const m = moviesList.find(x => x.id === id); if (!m) return;
+            document.getElementById('del-name').textContent = m.title;
+            document.getElementById('confirm-del-btn').onclick = async () => {
+                try {
+                    await fetch(API + '/api/movies/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + adminToken } });
+                    toast('O\'chirildi!'); closeModal('delete-modal'); loadAll();
+                } catch (e) { toast('Xato', 'warn'); }
+            };
+            openModal('delete-modal');
+        }
+
+        function onServerChange() {
+            const srv = document.getElementById('f-vserver').value;
+            const label = document.getElementById('url-label');
+            const input = document.getElementById('f-doodurl');
+            const hint = document.getElementById('url-hint');
+            const configs = {
+                mover: { label: 'Mover.uz Embed URL', placeholder: 'https://mover.uz/embed/VIDEO_ID/', hint: '📋 <b>Mover.uz:</b> mover.uz video sahifasidan embed kodini oling yoki to\'g\'ridan-to\'g\'ri video URLini kiriting.' },
+                doodstream: { label: 'DoodStream Embed URL', placeholder: 'https://doodstream.com/e/VIDEO_ID', hint: '📋 <b>DoodStream:</b> doodstream.com → Share → Embed → URL.' },
+                mixdrop: { label: 'Mixdrop Embed URL', placeholder: 'https://mixdrop.ag/e/VIDEO_ID', hint: '📋 <b>Mixdrop:</b> mixdrop.ag → Share → Embed → URL.' },
+                youtube: { label: 'YouTube URL', placeholder: 'https://www.youtube.com/watch?v=VIDEO_ID', hint: '📋 <b>YouTube:</b> video manzilini kiriting.' },
+                other: { label: 'Video Embed URL', placeholder: 'https://example.com/embed/VIDEO_ID', hint: '📋 Istalgan embed URL kiriting.' }
+            };
+            const c = configs[srv] || configs.other;
+            label.textContent = c.label; input.placeholder = c.placeholder; hint.innerHTML = c.hint;
+        }
+
+        // ===== IMAGE TABS =====
+        function switchImgTab(target, tab, btn) {
+            const prefix = target === 'movie' ? 'movie' : 'ad';
+            document.getElementById(prefix + '-img-tab-file').style.display = tab === 'file' ? '' : 'none';
+            document.getElementById(prefix + '-img-tab-url').style.display = tab === 'url' ? '' : 'none';
+            // Update active buttons in the parent container
+            btn.closest('div').querySelectorAll('.img-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function previewPosterUrl(url) {
+            const prev = document.getElementById('poster-preview');
+            if (url && url.startsWith('http')) { prev.src = url; prev.style.display = 'block'; }
+            else { prev.style.display = 'none'; }
+        }
+
+        function previewAdImgUrl(url) {
+            const prev = document.getElementById('ad-img-preview');
+            if (url && url.startsWith('http')) { prev.src = url; prev.style.display = 'block'; }
+            else { prev.style.display = 'none'; }
+        }
+
+        // ===== GALLERY =====
+        async function openGallery(target) {
+            _galleryTarget = target;
+            _gallerySelected = null;
+            document.getElementById('gallery-select-btn').disabled = true;
+            document.getElementById('gallery-count').textContent = '';
+            document.getElementById('gallery-grid').innerHTML = '<div class="photo-empty"><i class="fas fa-spinner" style="animation:spin 1s linear infinite;font-size:22px;margin-bottom:8px;display:block"></i>Yuklanmoqda...</div>';
+            openModal('gallery-modal');
+            try {
+                const res = await fetch(API + '/api/photos/list');
+                const photos = await res.json();
+                const grid = document.getElementById('gallery-grid');
+                if (!photos.length) { grid.innerHTML = '<div class="photo-empty"><i class="fas fa-image" style="font-size:32px;display:block;margin-bottom:8px"></i>Hali rasm yuklanmagan</div>'; return; }
+                document.getElementById('gallery-count').textContent = photos.length + ' ta rasm';
+                grid.innerHTML = '';
+                photos.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'photo-item'; div.dataset.name = p.name;
+                    div.innerHTML = `<img src="${API + p.url}" alt="${p.name}" loading="lazy"><div class="photo-check"><i class="fas fa-check"></i></div>`;
+                    div.onclick = () => selectPhoto(div, p);
+                    grid.appendChild(div);
+                });
+            } catch (e) { document.getElementById('gallery-grid').innerHTML = '<div class="photo-empty">Xato: server bilan boglanib bolmadi</div>'; }
+        }
+
+        function selectPhoto(el, photo) {
+            document.querySelectorAll('.photo-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            _gallerySelected = photo;
+            document.getElementById('gallery-select-btn').disabled = false;
+        }
+
+        function confirmGallerySelection() {
+            if (!_gallerySelected) return;
+            if (_galleryTarget === 'ad') {
+                const prev = document.getElementById('ad-img-preview');
+                prev.src = API + _gallerySelected.url; prev.style.display = 'block';
+                document.getElementById('ad-selected-name').textContent = '✓ ' + _gallerySelected.name;
+                document.getElementById('ad-img-file').value = '';
+                document.getElementById('ad-file-label').textContent = 'Rasm yuklash';
+                window._selectedAdPhoto = _gallerySelected.name;
+            } else {
+                const prev = document.getElementById('poster-preview');
+                prev.src = API + _gallerySelected.url; prev.style.display = 'block';
+                document.getElementById('selected-photo-name').textContent = '✓ ' + _gallerySelected.name;
+                document.getElementById('f-poster-file').value = '';
+                document.getElementById('file-label').textContent = 'Yangi rasm yuklash';
+                window._selectedPhotoName = _gallerySelected.name;
+            }
+            closeModal('gallery-modal');
+        }
+
+        // ===== EPISODES =====
+        async function openEpisodesModal(movieId) {
+            _curEpMovieId = movieId;
+            const m = moviesList.find(x => x.id === movieId);
+            document.getElementById('ep-modal-title').textContent = (m ? m.title : '') + ' — Qismlar';
+            document.getElementById('ep-num').value = '';
+            document.getElementById('ep-title').value = '';
+            document.getElementById('ep-url').value = '';
+            document.getElementById('ep-server').value = 'mover';
+            renderEpisodeList(m ? (m.episodes || []) : []);
+            openModal('ep-modal');
+        }
+
+        function renderEpisodeList(episodes) {
+            const container = document.getElementById('ep-list');
+            if (!episodes.length) { container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px"></i>Hali qism qo\'shilmagan</div>'; return; }
+            container.innerHTML = episodes.sort((a, b) => a.episode_num - b.episode_num).map(ep => `
+    <div class="ep-item">
+      <div class="ep-item-left">
+        <div class="ep-num">${ep.episode_num}</div>
+        <div>
+          <div class="ep-title">${ep.title || ep.episode_num + '-qism'}</div>
+          <div class="ep-url">${ep.video_url || 'URL yo\'q'}</div>
+        </div>
+      </div>
+      <div class="actions-cell">
+        <button class="act-btn" title="Tahrirlash" onclick="openEditEpisode(${ep.epId})"><i class="fas fa-pen"></i></button>
+        <button class="act-btn del" title="O'chirish" onclick="deleteEpisode(${ep.epId})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+        }
+
+        async function addEpisode() {
+            const video_url = document.getElementById('ep-url').value.trim();
+            if (!video_url) { toast('Video URL kiriting!', 'warn'); return; }
+            const ep_num = parseInt(document.getElementById('ep-num').value) || undefined;
+            let epTitle = document.getElementById('ep-title').value.trim();
+            if (!epTitle && ep_num) epTitle = ep_num + '-qism';
+            else if (/^\d+$/.test(epTitle)) epTitle = epTitle + '-qism';
+            const body = {
+                title: epTitle,
+                video_url,
+                video_type: document.getElementById('ep-server').value,
+                episode_num: ep_num
+            };
+            try {
+                const res = await fetch(API + '/api/movies/' + _curEpMovieId + '/episodes', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + adminToken }, body: JSON.stringify(body) });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Qism qo\'shildi!');
+                    const m = moviesList.find(x => x.id === _curEpMovieId);
+                    if (m) { if (!m.episodes) m.episodes = []; m.episodes.push(data.episode); renderEpisodeList(m.episodes); }
+                    await loadAll();
+                    document.getElementById('ep-num').value = '';
+                    document.getElementById('ep-title').value = '';
+                    document.getElementById('ep-url').value = '';
+                } else { toast(data.error || 'Xato', 'warn'); }
+            } catch (e) { toast('Server xatosi', 'warn'); }
+        }
+
+        function openEditEpisode(epId) {
+            const m = moviesList.find(x => x.id === _curEpMovieId); if (!m) return;
+            const ep = (m.episodes || []).find(e => e.epId === epId); if (!ep) return;
+            document.getElementById('ep-edit-epid').value = epId;
+            document.getElementById('ep-edit-num').value = ep.episode_num;
+            document.getElementById('ep-edit-title').value = ep.title || '';
+            document.getElementById('ep-edit-url').value = ep.video_url || '';
+            document.getElementById('ep-edit-server').value = ep.video_type || 'mover';
+            openModal('ep-edit-modal');
+        }
+
+        async function saveEpisode() {
+            const epId = document.getElementById('ep-edit-epid').value;
+            const body = {
+                episode_num: parseInt(document.getElementById('ep-edit-num').value),
+                title: document.getElementById('ep-edit-title').value.trim(),
+                video_url: document.getElementById('ep-edit-url').value.trim(),
+                video_type: document.getElementById('ep-edit-server').value
+            };
+            try {
+                const res = await fetch(API + '/api/movies/' + _curEpMovieId + '/episodes/' + epId, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + adminToken }, body: JSON.stringify(body) });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Qism yangilandi!');
+                    closeModal('ep-edit-modal');
+                    await loadAll();
+                    const m = moviesList.find(x => x.id === _curEpMovieId);
+                    if (m) renderEpisodeList(m.episodes || []);
+                } else { toast(data.error || 'Xato', 'warn'); }
+            } catch (e) { toast('Server xatosi', 'warn'); }
+        }
+
+        async function deleteEpisode(epId) {
+            if (!confirm('Bu qismni o\'chirasizmi?')) return;
+            try {
+                const res = await fetch(API + '/api/movies/' + _curEpMovieId + '/episodes/' + epId, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + adminToken } });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Qism o\'chirildi!');
+                    await loadAll();
+                    const m = moviesList.find(x => x.id === _curEpMovieId);
+                    if (m) renderEpisodeList(m.episodes || []);
+                } else { toast(data.error || 'Xato', 'warn'); }
+            } catch (e) { toast('Xato', 'warn'); }
+        }
+
+        // ===== ADS =====
+        async function loadAds() {
+            try {
+                const res = await fetch(API + '/api/ads');
+                adsList = (await res.json()).map(normalizeAd);
+                renderAds();
+            } catch (e) { toast('Server xatosi', 'warn'); }
+        }
+
+        function adPlacementLabel(p) {
+            return ({ all: 'Hamma joyda', sidebar: 'Yon tomon', player: 'Player ustida', kinolar: 'Kinolar bo\'limi', anime: 'Anime', multfilm: 'Multfilm', drama: 'Drama' }[p] || p || 'Yon tomon');
+        }
+
+        function renderAds() {
+            const g = document.getElementById('ads-grid');
+            if (!adsList.length) { g.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:30px;grid-column:1/-1;text-align:center"><i class="fas fa-rectangle-ad" style="font-size:32px;display:block;margin-bottom:8px"></i>Hali banner qo\'shilmagan</div>'; return; }
+            g.innerHTML = adsList.map(a => {
+                const imgSrc = getAdImageSrc(a);
+                return `
+    <div class="ad-card">
+      ${imgSrc ? `<img src="${imgSrc}" alt="${a.title || 'banner'}" onerror="this.style.display='none'">` : `<div class="ad-placeholder"><i class="fas fa-image"></i></div>`}
+      <div class="ad-card-body">
+        <strong style="font-size:13px">${a.title || 'Reklama banneri'}</strong>
+        <div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge-sm badge-green">${adPlacementLabel(a.placement)}</span>
+          <span class="badge-sm badge-orange">${a.duration || 5} soniya</span>
+          ${a.skip_enabled === false ? '<span class="badge-sm badge-blue">Skip yo\'q</span>' : '<span class="badge-sm badge-blue">Skip bor</span>'}
+        </div>
+        <div class="ad-url">${a.url ? '🔗 ' + a.url : 'URL yo\'q'}</div>
+        <div class="ad-card-actions">
+          <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="openAdEdit(${a.id})"><i class="fas fa-pen"></i> Tahrirlash</button>
+          <button class="act-btn del" onclick="deleteAd(${a.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        function openAdModal() {
+            document.getElementById('ad-edit-id').value = '';
+            document.getElementById('ad-modal-title').innerHTML = '<i class="fas fa-rectangle-ad"></i> Yangi banner';
+            document.getElementById('ad-title').value = '';
+            document.getElementById('ad-url').value = '';
+            document.getElementById('ad-placement').value = 'sidebar';
+            document.getElementById('ad-duration').value = 5;
+            document.getElementById('ad-skip-enabled').checked = true;
+            document.getElementById('ad-img-file').value = '';
+            document.getElementById('ad-img-url').value = '';
+            document.getElementById('ad-file-label').textContent = 'Rasm yuklash';
+            document.getElementById('ad-img-preview').style.display = 'none';
+            document.getElementById('ad-selected-name').textContent = '';
+            // Reset to file tab
+            document.getElementById('ad-img-tab-file').style.display = '';
+            document.getElementById('ad-img-tab-url').style.display = 'none';
+            document.querySelectorAll('#ad-modal .img-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+            window._selectedAdPhoto = '';
+            openModal('ad-modal');
+        }
+
+        function openAdEdit(id) {
+            const a = adsList.find(x => x.id === id); if (!a) return;
+            document.getElementById('ad-edit-id').value = id;
+            document.getElementById('ad-modal-title').innerHTML = '<i class="fas fa-pen"></i> Bannerni tahrirlash';
+            document.getElementById('ad-title').value = a.title || '';
+            document.getElementById('ad-url').value = a.url || '';
+            document.getElementById('ad-placement').value = a.placement || 'sidebar';
+            document.getElementById('ad-duration').value = a.duration || 5;
+            document.getElementById('ad-skip-enabled').checked = a.skip_enabled !== false;
+            document.getElementById('ad-img-file').value = '';
+            document.getElementById('ad-img-url').value = '';
+            document.getElementById('ad-file-label').textContent = 'Rasm yuklash';
+            document.getElementById('ad-selected-name').textContent = '';
+            // If image_url exists, show URL tab
+            if (a.image_url) {
+                document.getElementById('ad-img-url').value = a.image_url;
+                document.getElementById('ad-img-tab-file').style.display = 'none';
+                document.getElementById('ad-img-tab-url').style.display = '';
+                document.querySelectorAll('#ad-modal .img-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 1));
+                const prev = document.getElementById('ad-img-preview'); prev.src = a.image_url; prev.style.display = 'block';
+            } else if (a.image) {
+                document.getElementById('ad-img-tab-file').style.display = '';
+                document.getElementById('ad-img-tab-url').style.display = 'none';
+                document.querySelectorAll('#ad-modal .img-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+                const prev = document.getElementById('ad-img-preview'); prev.src = API + '/api/photos/' + a.image; prev.style.display = 'block';
+            } else {
+                document.getElementById('ad-img-preview').style.display = 'none';
+                document.getElementById('ad-img-tab-file').style.display = '';
+                document.getElementById('ad-img-tab-url').style.display = 'none';
+                document.querySelectorAll('#ad-modal .img-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+            }
+            window._selectedAdPhoto = a.image || '';
+            openModal('ad-modal');
+        }
+
+        function previewAdImg(input) {
+            const prev = document.getElementById('ad-img-preview');
+            if (input.files && input.files[0]) {
+                document.getElementById('ad-file-label').textContent = input.files[0].name;
+                const reader = new FileReader();
+                reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function saveAd() {
+            const fd = new FormData();
+            fd.append('title', document.getElementById('ad-title').value.trim());
+            fd.append('url', document.getElementById('ad-url').value.trim());
+            fd.append('placement', document.getElementById('ad-placement').value);
+            fd.append('duration', String(Math.max(3, parseInt(document.getElementById('ad-duration').value, 10) || 5)));
+            fd.append('skip_enabled', document.getElementById('ad-skip-enabled').checked ? 'true' : 'false');
+            // Check URL tab
+            const imgUrl = document.getElementById('ad-img-url').value.trim();
+            const urlTabVisible = document.getElementById('ad-img-tab-url').style.display !== 'none';
+            if (urlTabVisible && imgUrl) {
+                fd.append('image_url', imgUrl);
+            } else {
+                const file = document.getElementById('ad-img-file').files[0];
+                if (file) { fd.append('image', file); }
+                else if (window._selectedAdPhoto) { fd.append('existing_image', window._selectedAdPhoto); }
+            }
+            const editId = document.getElementById('ad-edit-id').value;
+            try {
+                let res;
+                if (editId) {
+                    res = await fetch(API + '/api/ads/' + editId, { method: 'PUT', headers: { 'Authorization': 'Bearer ' + adminToken }, body: fd });
+                } else {
+                    res = await fetch(API + '/api/ads', { method: 'POST', headers: { 'Authorization': 'Bearer ' + adminToken }, body: fd });
+                }
+                const data = await res.json();
+                if (data.success || data.id) { toast(editId ? 'Banner yangilandi!' : 'Banner qo\'shildi!'); closeModal('ad-modal'); loadAds(); }
+                else { toast(data.error || 'Xato', 'warn'); }
+            } catch (e) { toast('Server xatosi', 'warn'); }
+        }
+
+        function deleteAd(id) {
+            document.getElementById('confirm-del-ad-btn').onclick = async () => {
+                try {
+                    const res = await fetch(API + '/api/ads/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + adminToken } });
+                    const data = await res.json();
+                    if (data.success) { toast('Banner o\'chirildi!'); closeModal('delete-ad-modal'); loadAds(); }
+                    else { toast(data.error || 'Xato', 'warn'); }
+                } catch (e) { toast('Xato', 'warn'); }
+            };
+            openModal('delete-ad-modal');
+        }
+
+        // ===== TOAST =====
+        function toast(msg, type) {
+            const t = document.getElementById('toast');
+            t.style.background = type === 'warn' ? 'var(--warn)' : 'var(--accent)';
+            t.style.color = type === 'warn' ? '#000' : '#000';
+            t.innerHTML = `<i class="fas fa-${type === 'warn' ? 'exclamation-triangle' : 'check-circle'}"></i> ${msg}`;
+            t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+
+</html>

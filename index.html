@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>afilms — O'zbek tilida tarjima kinolar, seriallar, animelar</title>
+    <meta name="description"
+        content="afilms — O'zbek tilida eng yaxshi tarjima kinolar, seriallar, hind filmlari, premyeralar, fantastika, komediya va animeni bepul, reklamasiz HD va Full HD sifatda onlayn tomosha qiling.">
+    <meta name="keywords" content="kinolar, o'zbek tilida, tarjima kinolar, kinolar 2025, premyeralar, hind kinolar, seriallar, anime o'zbek tilida, komediyalar, multfilmlar, afilms">
+    <meta property="og:title" content="afilms - Eng zo'r tarjima kinolar markazi">
+    <meta property="og:type" content="website">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505; --surface: #0a0a0a; --card: #0d0d0d;
+            --accent: #FF4D00; --accent-d: #d44000; --glow: rgba(255, 77, 0, .15);
+            --text: #ffffff; --muted: #9ca3af; --border: rgba(255, 255, 255, 0.1); --r: 2px
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh }
+        a { text-decoration: none; color: inherit }
+
+        header { background: rgba(5, 5, 5, .95); backdrop-filter: blur(16px); height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border) }
+        .logo { color: var(--accent); font-size: 26px; font-weight: 950; font-style: italic; letter-spacing: -1.5px; text-transform: uppercase }
+        .header-center { flex: 1; max-width: 480px; margin: 0 28px }
+        .search-box { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 10px 16px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; transition: .2s }
+        .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow) }
+        .search-box i { color: var(--accent); font-size: 16px }
+        .search-box input { background: 0; border: 0; color: #fff; outline: 0; width: 100%; font-size: 14px; font-family: inherit }
+        .search-box input::placeholder { color: #666 }
+        nav { display: flex; gap: 6px; align-items: center }
+        nav a { color: var(--muted); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; padding: 8px 12px; border-radius: 0; transition: .2s; cursor: pointer }
+        nav a:hover, nav a.active { color: #fff; border-bottom: 2px solid var(--accent); background: none }
+        .tg-btn { background: #FF4D00 !important; color: #fff !important; font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em; padding: 8px 16px !important; border-radius: 0 !important; display: flex; align-items: center; gap: 6px; margin-left: 8px; transition: .2s }
+        .tg-btn:hover { background: #d44000 !important; transform: translateY(-1px) }
+        .menu-toggle { display: none; background: var(--surface); border: 1px solid var(--border); color: #fff; width: 38px; height: 38px; border-radius: 0; font-size: 16px; cursor: pointer; align-items: center; justify-content: center }
+
+        .mobile-menu { display: none; position: fixed; top: 72px; right: 0; left: 0; background: rgba(5, 5, 5, .98); backdrop-filter: blur(16px); border-bottom: 2px solid var(--accent); z-index: 99; padding: 10px 4% 14px; flex-direction: column; gap: 4px; animation: slideD .2s ease }
+        .mobile-menu.open { display: flex }
+        @keyframes slideD { from { opacity: 0; transform: translateY(-8px) } to { opacity: 1; transform: translateY(0) } }
+        .mobile-menu a { color: var(--muted); font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 14px; border-radius: 0; display: flex; align-items: center; gap: 8px; transition: .2s; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent }
+        .mobile-menu a:hover, .mobile-menu a.active { color: #fff; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent) }
+
+        /* FEATURED HERO BANNER (for Barchasi) */
+        .featured-banner { position: relative; margin: 18px 0 28px; border-radius: var(--r); overflow: hidden; min-height: 340px; background: #000; box-shadow: 0 12px 40px rgba(0,0,0,.75); border: 1px solid var(--border); cursor: pointer }
+        .featured-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .7s; display: flex; align-items: flex-end }
+        .featured-slide.active { opacity: 1 }
+        .featured-slide .fb-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(.4) blur(1px); transform: scale(1.05) }
+        .featured-slide .fb-grad { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,5,5,.98) 0%, rgba(5,5,5,.8) 45%, rgba(5,5,5,.25) 100%), linear-gradient(0deg, rgba(5,5,5,.9) 0%, transparent 50%) }
+        .featured-slide .fb-inner { position: relative; padding: 32px 40px; display: flex; gap: 26px; align-items: flex-end; width: 100% }
+        .featured-slide .fb-poster { width: 170px; aspect-ratio: 2/3; border-radius: var(--r); overflow: hidden; flex-shrink: 0; box-shadow: 0 10px 30px rgba(0,0,0,.8); border: 1px solid rgba(255,77,0,.4) }
+        .featured-slide .fb-poster img { width: 100%; height: 100%; object-fit: cover; display: block }
+        .featured-slide .fb-body { flex: 1; min-width: 0 }
+        .featured-slide .fb-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 0; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase }
+        .featured-slide .fb-title { font-size: 42px; font-weight: 950; tracking-tighter: -1.5px; line-height: 1.05; margin-bottom: 12px; text-transform: uppercase; text-shadow: 0 3px 12px rgba(0,0,0,.8) }
+        .featured-slide .fb-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px }
+        .featured-slide .fb-meta span { background: rgba(255,255,255,.05); padding: 4px 12px; border-radius: 0; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #ddd; border: 1px solid rgba(255,255,255,.08) }
+        .featured-slide .fb-desc { color: #a1a1aa; font-size: 13px; line-height: 1.6; max-width: 620px; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+        .fb-cta { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #fff; border: 1px solid #fff; color: #000; font-weight: 900; font-size: 12px; text-transform: uppercase; border-radius: 0; transition: .25s }
+        .fb-cta:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-1px) }
+        .featured-dots { position: absolute; bottom: 16px; right: 24px; display: flex; gap: 6px; z-index: 3 }
+        .featured-dots span { width: 8px; height: 8px; border-radius: 0; background: rgba(255,255,255,.25); cursor: pointer; transition: .2s }
+        .featured-dots span.active { background: var(--accent); width: 24px }
+
+        .container { padding: 20px 4%; max-width: 1400px; margin: 0 auto }
+        .page-layout { display: flex; gap: 24px; align-items: flex-start }
+        .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 28px }
+        .sidebar { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px }
+
+        .section-block { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.04); border-radius: var(--r); padding: 20px }
+        .section-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-b: 1px solid rgba(255,255,255,.08) }
+        .section-title h2 { font-size: 18px; font-weight: 950; text-transform: uppercase; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px }
+        .section-title h2::before { content: ''; display: block; width: 6px; height: 24px; background: var(--accent) !important; border-radius: 0 }
+
+        /* HORIZONTAL SLIDER */
+        .row-scroll { position: relative }
+        .movie-row { display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; padding: 6px 2px 12px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; user-select: none; cursor: grab }
+        .movie-row.dragging { cursor: grabbing; scroll-behavior: auto }
+        .movie-row::-webkit-scrollbar { height: 6px }
+        .movie-row::-webkit-scrollbar-track { background: transparent }
+        .movie-row::-webkit-scrollbar-thumb { background: rgba(255,77,0,.3); border-radius: 0 }
+        .row-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 48px; background: rgba(5,5,5,.9); border: 1px solid var(--border); color: var(--accent); border-radius: 0; cursor: pointer; z-index: 5; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: .2s; opacity: .85 }
+        .row-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff }
+        .row-btn.prev { left: -6px } .row-btn.next { right: -6px }
+        @media(max-width:768px) { .row-btn { display: none } }
+
+        .movie-card { flex: 0 0 auto; width: 160px; background: var(--card); border-radius: var(--r); overflow: hidden; transition: .3s; border: 1px solid rgba(255,255,255,.04); display: flex; flex-direction: column }
+        .movie-card:hover { transform: translateY(-4px); border-color: var(--accent) }
+        .poster-wrap { position: relative; overflow: hidden; aspect-ratio: 2/3; background: var(--surface) }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s }
+        .movie-card:hover img { transform: scale(1.05) }
+        .movie-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.65); display: flex; align-items: center; justify-content: center; opacity: 0; transition: .25s }
+        .movie-card:hover .movie-overlay { opacity: 1 }
+        .play-icon { width: 44px; height: 44px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; box-shadow: 0 4px 14px rgba(255,77,0,.4) }
+        .movie-info { padding: 12px }
+        .movie-info h3 { font-size: 13px; font-weight: 800; margin-bottom: 5px; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase }
+        .movie-meta { display: flex; align-items: center; justify-content: space-between }
+        .movie-genre { font-size: 11px; color: var(--muted); font-style: italic }
+        .movie-badge { font-size: 9px; background: rgba(255,255,255,0.08); color: #fff; padding: 2px 6px; border-radius: 0; font-weight: 800; border: 1px solid rgba(255,255,255,0.1) }
+
+        .sidebar-widget { background: var(--card); border-radius: var(--r); padding: 16px; border: 1px solid rgba(255,255,255,.04) }
+        .widget-title { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; border-left: 3px solid var(--accent); padding-left: 8px; color: #fff }
+        .social-buttons { display: flex; gap: 8px; margin-bottom: 16px }
+        .soc-btn { flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: var(--r); color: #fff; font-size: 16px; transition: .2s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08) }
+        .soc-btn:hover { transform: translateY(-2px); border-color: var(--accent); color: var(--accent) }
+        .soc-tg:hover { color: #0088cc } .soc-yt:hover { color: #ff0000 } .soc-ig:hover { color: #bc2a8d }
+
+        .ad-empty { height: 120px; background: rgba(255,255,255,.02); display: flex; align-items: center; justify-content: center; color: #444; border-radius: 0; font-size: 12px }
+        .ad-rotator { position: relative; cursor: pointer; overflow: hidden; border-radius: var(--r); background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,0.04) }
+        .ad-rotator img { width: 100%; height: auto; max-height: 220px; object-fit: cover; display: block }
+        .ad-rotator-timer { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--accent); transition: width linear }
+        .ad-rotator-dots { display: flex; justify-content: center; gap: 5px; padding: 8px 0 10px }
+        .ad-rotator-dot { width: 6px; height: 6px; border-radius: 0; background: rgba(255,255,255,.2); transition: .2s }
+        .ad-rotator-dot.active { background: var(--accent) }
+
+        .loading { text-align: center; padding: 60px; color: var(--muted) }
+        .loading i { font-size: 36px; animation: spin 1s linear infinite; margin-bottom: 12px; display: block; color: var(--accent) }
+        @keyframes spin { to { transform: rotate(360deg) } }
+        #no-results { display: none; text-align: center; padding: 60px; color: var(--muted) }
+
+        footer { text-align: center; padding: 40px 5%; margin-top: 40px; border-top: 1px solid var(--border); font-size: 11px; font-family: monospace; color: var(--muted) }
+        footer a { color: var(--accent); font-weight: 700 }
+
+        @media(max-width:900px) {
+            .page-layout { flex-direction: column }
+            .sidebar { width: 100% }
+        }
+        @media(max-width:768px) {
+            header { height: 62px; padding: 0 4%; gap: 8px }
+            .logo { font-size: 20px; letter-spacing: -1px }
+            header nav { display: none }
+            .menu-toggle { display: flex }
+            .header-center { flex: 1; max-width: unset; margin: 0 8px }
+            .mobile-menu { top: 62px }
+            .featured-banner { min-height: 180px; height: auto; }
+            .featured-slide { position: relative; }
+            .featured-slide .fb-inner { padding: 16px; flex-direction: row; gap: 14px; align-items: center; width: 100%; }
+            .featured-slide .fb-poster { width: 75px; height: 112px; display: block; flex-shrink: 0; }
+            .featured-slide .fb-body { flex: 1; min-width: 0; }
+            .featured-slide .fb-tag { margin-bottom: 6px; padding: 2px 6px; font-size: 8px; }
+            .featured-slide .fb-title { font-size: 16px; font-weight: 900; line-height: 1.2; margin-bottom: 6px; }
+            .featured-slide .fb-meta { margin-bottom: 8px; gap: 4px; }
+            .featured-slide .fb-meta span { padding: 2px 6px; font-size: 9px; }
+            .fb-cta { padding: 8px 12px; font-size: 10px; margin-top: 2px; }
+            .featured-slide .fb-desc { display: none }
+            .movie-card { width: 130px }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/index.html" class="logo">afilms</a>
+        <div class="header-center">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Kino qidirish..." oninput="searchMovies()">
+            </div>
+        </div>
+        <nav id="desktop-nav">
+            <a class="active" onclick="filterMovies('all',this)">Barchasi</a>
+            <a onclick="filterMovies('Anime',this)">Anime</a>
+            <a onclick="filterMovies('Kino',this)">Kino</a>
+            <a onclick="filterMovies('Multfilm',this)">Multfilm</a>
+            <a onclick="filterMovies('Drama',this)">Drama</a>
+            <a href="#" id="tg-link-desk" class="tg-btn" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+        </nav>
+        <button class="menu-toggle" id="menu-toggle-btn" onclick="toggleMobileMenu(event)"><i class="fas fa-ellipsis-v" id="menu-icon"></i></button>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a class="active" onclick="mobileFilter(event,'all',this)"><i class="fas fa-border-all"></i> Barchasi</a>
+        <a onclick="mobileFilter(event,'Anime',this)"><i class="fas fa-dragon"></i> Anime</a>
+        <a onclick="mobileFilter(event,'Kino',this)"><i class="fas fa-film"></i> Kino</a>
+        <a onclick="mobileFilter(event,'Multfilm',this)"><i class="fas fa-tv"></i> Multfilm</a>
+        <a onclick="mobileFilter(event,'Drama',this)"><i class="fas fa-masks-theater"></i> Drama</a>
+        <a href="#" id="tg-link-mob" class="tg-btn" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+    </div>
+
+    <div class="container">
+        <div id="featured-banner-wrap"></div>
+
+        <div class="page-layout" id="movie-list">
+            <div class="main-content" id="main-content">
+                <div class="loading" id="loading"><i class="fas fa-spinner"></i> Kinolar yuklanmoqda...</div>
+                <div id="no-results">Hech qanday kino topilmadi</div>
+            </div>
+            <aside class="sidebar">
+                <div class="social-buttons">
+                    <a href="#" id="tg-side" class="soc-btn soc-tg"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="#" id="yt-side" class="soc-btn soc-yt" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="#" id="ig-side" class="soc-btn soc-ig" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="sidebar-widget">
+                    <div class="widget-title">Tavsiya etiladi</div>
+                    <div style="font-size:12px;color:#aaa;line-height:1.6">Bu yerda siz izlagan eng sara multfilmlar, fantastik seriallar va eng so'nggi kinolarni tomosha qilishingiz mumkin.</div>
+                </div>
+                <div class="sidebar-widget" id="ads-widget">
+                    <div class="widget-title">Reklama</div>
+                    <div id="ads-container"><div class="ad-empty">Yuklanmoqda...</div></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 afilms. Barcha huquqlar himoyalangan.</p>
+    </footer>
+
+    <script>
+        const API = window.location.origin;
+        let movies = [];
+        let currentFilter = 'all';
+        let currentSearch = '';
+        let allAds = [];
+        let settings = {};
+        const adRotators = [];
+
+        function getPosterSrc(m) {
+            if (m.poster_url && String(m.poster_url).startsWith('http')) return m.poster_url;
+            if (m.poster && String(m.poster).startsWith('http')) return m.poster;
+            if (m.poster) return `${API}/api/photos/${m.poster}`;
+            return `https://via.placeholder.com/300x450/1a1a22/00d672?text=${encodeURIComponent(m.title||'')}`;
+        }
+        function getAdImageSrc(ad) {
+            if (ad.image_url && ad.image_url.startsWith('http')) return ad.image_url;
+            if (ad.image) return `${API}/api/photos/${ad.image}`;
+            return '';
+        }
+        function getAdsForPlacement(placement) {
+            return (allAds || []).filter(a => {
+                if (a.active === false) return false;
+                const p = (a.placement || 'sidebar').toLowerCase();
+                return p === 'all' || p === placement.toLowerCase();
+            });
+        }
+        function getMovieUrl(m) {
+            if (m.folder_name) {
+                return `/movie/${m.folder_name}/player.html`;
+            }
+            return `/player.html?id=${m.id}`;
+        }
+        function destroyAdRotators(group) {
+            for (let i = adRotators.length - 1; i >= 0; i--) {
+                const r = adRotators[i];
+                if (!group || r.group === group) { r.destroy && r.destroy(); adRotators.splice(i, 1); }
+            }
+        }
+        function mountAdRotator(container, ads, { group = 'general' } = {}) {
+            if (!ads.length) return null;
+            let idx = 0, timer = null;
+            const wrap = document.createElement('div'); wrap.className = 'ad-rotator';
+            const img = document.createElement('img'); img.alt = 'Reklama';
+            const timerBar = document.createElement('div'); timerBar.className = 'ad-rotator-timer';
+            const dotsWrap = document.createElement('div'); dotsWrap.className = 'ad-rotator-dots';
+            wrap.appendChild(img); wrap.appendChild(timerBar);
+            container.appendChild(wrap);
+            if (ads.length > 1) container.appendChild(dotsWrap);
+            function renderDots() {
+                dotsWrap.innerHTML = '';
+                ads.forEach((_, i) => { const d = document.createElement('div'); d.className = 'ad-rotator-dot' + (i === idx ? ' active' : ''); dotsWrap.appendChild(d); });
+            }
+            function show(i) {
+                idx = i; const ad = ads[idx]; const src = getAdImageSrc(ad);
+                img.src = src || ''; img.style.display = src ? 'block' : 'none';
+                img.onerror = () => { img.style.display = 'none'; };
+                wrap.onclick = ad.url ? () => window.open(ad.url, '_blank', 'noopener') : null;
+                wrap.style.cursor = ad.url ? 'pointer' : 'default';
+                if (ads.length > 1) renderDots();
+                schedule();
+            }
+            function schedule() {
+                clearTimeout(timer);
+                const dur = Math.max(3, parseInt(ads[idx].duration, 10) || 5) * 1000;
+                timerBar.style.transition = 'none'; timerBar.style.width = '0%';
+                requestAnimationFrame(() => { timerBar.style.transition = `width ${dur}ms linear`; timerBar.style.width = '100%'; });
+                timer = setTimeout(() => show((idx + 1) % ads.length), dur);
+            }
+            show(0);
+            const rotator = { group, destroy: () => clearTimeout(timer) };
+            adRotators.push(rotator);
+            return rotator;
+        }
+
+        async function loadSettings() {
+            try {
+                const res = await fetch(API + '/api/settings');
+                settings = await res.json();
+            } catch (e) { settings = {}; }
+            const tg = settings.telegram_url || 'https://t.me/afilmsuz';
+            const yt = settings.youtube_url || 'https://www.youtube.com/@afilmsuz';
+            const ig = settings.instagram_url || 'https://www.instagram.com/afilmsuz';
+            ['tg-link-desk','tg-link-mob','tg-side'].forEach(id => { const el = document.getElementById(id); if (el) el.href = tg; });
+            const ye = document.getElementById('yt-side'); if (ye) ye.href = yt;
+            const ie = document.getElementById('ig-side'); if (ie) ie.href = ig;
+        }
+
+        // Momentum drag scroll for horizontal rows
+        function enableDragScroll(el){
+            let isDown=false, startX=0, scrollStart=0, moved=false, vX=0, lastX=0, lastT=0, raf=null;
+            el.addEventListener('pointerdown', e=>{
+                if (e.pointerType !== 'mouse') return;
+                if (e.button!==0) return;
+                isDown=true; moved=false; startX=e.clientX; scrollStart=el.scrollLeft; lastX=e.clientX; lastT=performance.now(); vX=0;
+                el.classList.add('dragging'); cancelAnimationFrame(raf);
+            });
+            el.addEventListener('pointermove', e=>{
+                if(!isDown) return;
+                const dx=e.clientX-startX;
+                if(Math.abs(dx)>15 && !moved) {
+                    moved=true;
+                    try{el.setPointerCapture(e.pointerId);}catch(_){}
+                }
+                if(moved) {
+                    el.scrollLeft = scrollStart - dx;
+                    const now=performance.now(); const dt=now-lastT;
+                    if(dt>0){ vX = (lastX - e.clientX)/dt*16; lastX=e.clientX; lastT=now; }
+                }
+            });
+            const end=e=>{
+                if(!isDown) return;
+                isDown=false; el.classList.remove('dragging');
+                if(moved) {
+                    try{el.releasePointerCapture(e.pointerId);}catch(_){}
+                    const stop=ev=>{ ev.preventDefault(); ev.stopPropagation(); el.removeEventListener('click',stop,true); }; el.addEventListener('click',stop,true);
+                }
+                let v=vX; const step=()=>{ if(Math.abs(v)<0.2) return; el.scrollLeft+=v; v*=0.94; raf=requestAnimationFrame(step); }; step();
+            };
+            el.addEventListener('pointerup', end);
+            el.addEventListener('pointercancel', end);
+            el.addEventListener('pointerleave', end);
+        }
+
+        async function loadMovies() {
+            try {
+                const res = await fetch(API + '/api/movies');
+                movies = await res.json();
+                document.getElementById('loading').style.display = 'none';
+                buildFeaturedBanner();
+                displayMovies(movies);
+            } catch (e) {
+                document.getElementById('loading').innerHTML = '<i class="fas fa-exclamation-triangle" style="animation:none"></i> Server bilan bog\'lanib bo\'lmadi';
+            }
+        }
+
+        // ---- FEATURED BANNER (rotates through random anime; falls back to any movie) ----
+        let featuredTimer = null;
+        function buildFeaturedBanner() {
+            clearInterval(featuredTimer);
+            const wrap = document.getElementById('featured-banner-wrap');
+            if (!movies.length) { wrap.innerHTML = ''; return; }
+            let pool = movies.filter(m => (m.genre || '').toLowerCase().includes('anime'));
+            if (pool.length < 3) pool = movies.slice();
+            const items = pool.sort(() => Math.random() - .5).slice(0, Math.min(6, pool.length));
+            const banner = document.createElement('div'); banner.className = 'featured-banner';
+            items.forEach((m, i) => {
+                const poster = getPosterSrc(m);
+                const slide = document.createElement('div');
+                slide.className = 'featured-slide' + (i === 0 ? ' active' : '');
+                slide.onclick = () => location.href = getMovieUrl(m);
+                slide.innerHTML = `
+                    <div class="fb-bg" style="background-image:url('${poster}')"></div>
+                    <div class="fb-grad"></div>
+                    <div class="fb-inner">
+                        <div class="fb-poster"><img src="${poster}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/300x450/1a1a22/00d672?text=${encodeURIComponent(m.title)}'"></div>
+                        <div class="fb-body">
+                            <div class="fb-tag"><i class="fas fa-star"></i> TAVSIYA</div>
+                            <div class="fb-title">${m.title}</div>
+                            <div class="fb-meta">
+                                <span>${(m.genre || 'Anime').split('/')[0].trim()}</span>
+                                <span>${m.year || ''}</span>
+                                <span>${m.quality || 'HD'}</span>
+                            </div>
+                            <div class="fb-desc">${(m.description || '').slice(0, 220)}</div>
+                            <a class="fb-cta" href="${getMovieUrl(m)}" onclick="event.stopPropagation()"><i class="fas fa-play"></i> Hozir tomosha qilish</a>
+                        </div>
+                    </div>`;
+                banner.appendChild(slide);
+            });
+            const dots = document.createElement('div'); dots.className = 'featured-dots';
+            items.forEach((_, i) => { const d = document.createElement('span'); if (i===0) d.className='active'; d.onclick = e=>{ e.stopPropagation(); go(i); }; dots.appendChild(d); });
+            banner.appendChild(dots);
+            wrap.innerHTML = ''; wrap.appendChild(banner);
+            let cur = 0;
+            function go(idx) {
+                const slides = banner.querySelectorAll('.featured-slide');
+                const dotEls = dots.querySelectorAll('span');
+                slides[cur].classList.remove('active'); dotEls[cur].classList.remove('active');
+                cur = idx;
+                slides[cur].classList.add('active'); dotEls[cur].classList.add('active');
+            }
+            if (items.length > 1) featuredTimer = setInterval(() => go((cur + 1) % items.length), 5500);
+        }
+
+        function classifyGenre(genreStr) {
+            const g = (genreStr || '').toLowerCase();
+            if (g.includes('anime')) return 'ANIME';
+            if (g.includes('multfilm')) return 'MULTFILMLAR';
+            if (g.includes('drama')) return 'DRAMA';
+            if (g.includes('komediya')) return 'KOMEDIYALAR';
+            if (g.includes('kino')) return 'KINOLAR';
+            return (genreStr || 'BOSHQA').split('/')[0].trim().toUpperCase() + ' KINOLAR';
+        }
+
+        function displayMovies(list) {
+            const mc = document.getElementById('main-content');
+            const nr = document.getElementById('no-results');
+            mc.querySelectorAll('.section-block').forEach(b => b.remove());
+            destroyAdRotators('section');
+            if (!list.length) { nr.style.display = 'block'; return; }
+            nr.style.display = 'none';
+
+            const groups = {};
+            list.forEach(m => { const g = classifyGenre(m.genre); (groups[g] = groups[g] || []).push(m); });
+
+            let ci = 0;
+            for (const [cat, items] of Object.entries(groups)) {
+                const sec = document.createElement('div');
+                sec.className = 'section-block';
+                sec.innerHTML = `<div class="section-title"><h2 class="c${ci % 6}">${cat}</h2><small style="color:var(--muted);font-size:11px">${items.length} ta</small></div>`;
+                const scrollWrap = document.createElement('div'); scrollWrap.className = 'row-scroll';
+                const row = document.createElement('div'); row.className = 'movie-row';
+                items.forEach(m => {
+                    const a = document.createElement('a');
+                    a.className = 'movie-card';
+                    a.href = getMovieUrl(m);
+                    const poster = getPosterSrc(m);
+                    a.innerHTML = `<div class="poster-wrap"><img src="${poster}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/300x450/1a1a22/00d672?text=${encodeURIComponent(m.title)}'"><div class="movie-overlay"><div class="play-icon"><i class="fas fa-play"></i></div></div></div><div class="movie-info"><h3>${m.title}</h3><div class="movie-meta"><span class="movie-genre">${(m.genre || '').split('/')[0].trim()}</span><span class="movie-badge">${m.quality || 'HD'}</span></div></div>`;
+                    row.appendChild(a);
+                });
+                const prev = document.createElement('button'); prev.className='row-btn prev'; prev.innerHTML='<i class="fas fa-chevron-left"></i>'; prev.onclick=()=>row.scrollBy({left:-row.clientWidth*.8,behavior:'smooth'});
+                const next = document.createElement('button'); next.className='row-btn next'; next.innerHTML='<i class="fas fa-chevron-right"></i>'; next.onclick=()=>row.scrollBy({left:row.clientWidth*.8,behavior:'smooth'});
+                scrollWrap.appendChild(prev); scrollWrap.appendChild(row); scrollWrap.appendChild(next);
+                sec.appendChild(scrollWrap);
+                mc.appendChild(sec);
+                enableDragScroll(row);
+                ci++;
+            }
+        }
+
+        function applyFilters() {
+            let f = movies;
+            if (currentSearch.trim()) f = f.filter(m => m.title.toLowerCase().includes(currentSearch.toLowerCase()) || (m.genre || '').toLowerCase().includes(currentSearch.toLowerCase()));
+            if (currentFilter !== 'all') {
+                const cf = currentFilter.toLowerCase();
+                f = f.filter(m => {
+                    const g = (m.genre || '').toLowerCase();
+                    if (cf === 'kino') return g.includes('kino') || (!g.includes('anime') && !g.includes('multfilm') && !g.includes('drama'));
+                    return g.includes(cf);
+                });
+            }
+            displayMovies(f);
+        }
+        function filterMovies(g, btn) { currentFilter = g; document.querySelectorAll('#desktop-nav a').forEach(a => a.classList.remove('active')); if (btn) btn.classList.add('active'); applyFilters(); }
+        function mobileFilter(ev, g, btn) { if (ev){ ev.preventDefault(); ev.stopPropagation(); } currentFilter = g; document.querySelectorAll('.mobile-menu a').forEach(a => a.classList.remove('active')); if (btn) btn.classList.add('active'); applyFilters(); closeMobileMenu(); }
+        function toggleMobileMenu(ev) { if (ev){ ev.preventDefault(); ev.stopPropagation(); } const m = document.getElementById('mobile-menu'), i = document.getElementById('menu-icon'); m.classList.toggle('open'); i.className = m.classList.contains('open') ? 'fas fa-times' : 'fas fa-ellipsis-v'; }
+        function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('menu-icon').className = 'fas fa-ellipsis-v'; }
+        document.addEventListener('click', e => { const m = document.getElementById('mobile-menu'), b = document.getElementById('menu-toggle-btn'); if (m.classList.contains('open') && !m.contains(e.target) && !b.contains(e.target)) closeMobileMenu(); });
+        function searchMovies() { currentSearch = document.getElementById('search-input').value; applyFilters(); }
+
+        async function loadAds() {
+            const widget = document.getElementById('ads-widget');
+            const container = document.getElementById('ads-container');
+            try {
+                const res = await fetch(API + '/api/ads');
+                allAds = await res.json();
+                const sidebarAds = getAdsForPlacement('sidebar').filter(a => getAdImageSrc(a));
+                if (!sidebarAds.length) { widget.style.display = 'none'; return; }
+                widget.style.display = ''; container.innerHTML = '';
+                destroyAdRotators('sidebar');
+                mountAdRotator(container, sidebarAds, { group: 'sidebar' });
+            } catch (e) { widget.style.display = 'none'; }
+        }
+
+        loadSettings();
+        loadMovies();
+        loadAds();
+    </script>
+</body>
+
+</html>

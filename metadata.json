@@ -1,0 +1,6 @@
+{
+  "name": "afilms",
+  "description": "Tarjima kinolar, seriallar va animelar tomosha qilish uchun premium platforma",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
